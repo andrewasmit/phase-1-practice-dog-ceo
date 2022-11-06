@@ -5,6 +5,8 @@ const dogDiv = document.querySelector('#dog-image-container');
 const imgUrl = "https://dog.ceo/api/breeds/image/random/4";
 const breedUrl = 'https://dog.ceo/api/breeds/list/all';
 const breedDiv = document.querySelector('#dog-breeds');
+const dropdown = document.querySelector('#breed-dropdown')
+
 
 fetch(imgUrl)
 .then(res=>res.json())
@@ -34,7 +36,6 @@ function handleBreeds(e){
         let li = `<li class= "breed-li">${breed}</li>`
         return li;
     })
-    // console.log(breedArr);
     breedArr.forEach(elem=>{
         breedDiv.innerHTML += elem;
     })
@@ -45,3 +46,28 @@ breedDiv.addEventListener('click', function(e){
     // console.log(target);
     target.style.color = 'red';
 })
+
+
+
+dropdown.addEventListener('change', function(e){
+    let click = e.target.value;
+    breedDiv.innerHTML = ''; 
+    filterBreeds(click);
+})
+
+function filterBreeds(e){
+    fetch(breedUrl)
+    .then(res=>res.json())
+    .then(data=> {
+        const breedObj = Object.keys(data.message);
+        const filteredObj = breedObj.filter(name=>name.slice(0,1)=== e);
+        filteredObj.map(breed=>{
+            let li = `<li class= "breed-li">${breed}</li>`
+            return li;
+        }).forEach(elem=>{
+            breedDiv.innerHTML += elem;
+        })
+    }) 
+}
+
+
